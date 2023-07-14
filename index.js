@@ -34,6 +34,10 @@ function checkGuess() {
 
     hideAllMessages();
 
+    if (guessInput.value === '') {
+        submitButton.disabled = true;
+    }
+
     if (guess === targetNumber) {
         numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
         numberOfGuessesMessage.style.display = '';
@@ -44,14 +48,25 @@ function checkGuess() {
 
     if (guess !== targetNumber) {
         if (guess < targetNumber) {
-            tooLowMessage.style.display = '';
+            tooLowMessage.style.display = ''
+            if (attempts !== maxNumberOfAttempts) {
+                tooLowMessage.style.display = '';
+            } else {
+                tooLowMessage.innerText = 'You guessed too low.';
+                tooLowMessage.style.display = ''
+            }
         } else {
-            tooHighMessage.style.display = '';
+            if (attempts !== maxNumberOfAttempts) {
+                tooHighMessage.style.display = '';
+            } else {
+                tooHighMessage.innerText = 'You guessed too high.';
+                tooHighMessage.style.display = '';
+            }
         }
         let remainingAttempts = maxNumberOfAttempts - attempts;
         numberOfGuessesMessage.style.display = '';
         let remainingAttemptsMessage = remainingAttempts === 1 ? `${remainingAttempts} guess` : `${remainingAttempts} guesses`;
-        numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttemptsMessage} remaining`;
+        numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttemptsMessage} remaining.`;
     }
 
     if (attempts === maxNumberOfAttempts) {
@@ -83,7 +98,7 @@ function setup() {
     resetButton.style.display = 'none';
 }
 
-guessInput.addEventListener('change', e => {
+guessInput.addEventListener('input', e => {
     hideAllMessages();
     if (e.target.value <= 0) {
         lessThanAllowed.style.display = '';
@@ -92,6 +107,12 @@ guessInput.addEventListener('change', e => {
         greaterThanAllowed.style.display = '';
         submitButton.disabled = true;
     } else submitButton.disabled = false;
+})
+
+window.addEventListener('DOMContentLoaded', e => {
+    if (guessInput.value === '') {
+        submitButton.disabled = true;
+    }
 })
 
 resetButton.addEventListener('click', setup);
